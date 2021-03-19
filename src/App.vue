@@ -1,32 +1,81 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <component :is="layout">
+      <router-view />
+    </component>
+    <c-alert></c-alert>
+  </v-app>
 </template>
 
+<script>
+import { mapGetters, mapActions } from 'vuex'
+const defaultLayout = 'default'
+
+export default {
+  name: 'App',
+  computed: {
+    ...mapGetters('user', {
+      getProfile: 'GET_PROFILE'
+    }),
+    layout() {
+      return (this.$route.meta.layout || defaultLayout) + '-layout'
+    }
+  },
+  methods: {
+    ...mapActions ('user', {
+      setProfile: 'SET_PROFILE'
+    }),
+    ...mapActions ('auth', {
+      setToken: 'SET_TOKEN'
+    }),
+    async setProfile_async (){
+      let r = await this.setProfile()
+      if(r)
+        this.logged = true
+    }
+  },
+  data: () => ({
+    drawer: null,
+    logged: null,
+    async: null
+  }),
+  created() {
+    // this.$session.destroy()
+    if(!this.$session.exists()){
+      this.$session.start()
+      this.setProfile({logged: false})
+    } else {
+      if (this.$session.get('token')) {
+        this.setToken(this.$session.get('token'))
+        this.setProfile_async()
+      } else {
+        this.setProfile({logged: false})
+      }
+    }
+  },
+  mounted () {
+    window.Echo.channel('chats')
+      .listen('Chats', (e) => {
+        console.log(e)
+      })
+  }
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+html {
+  overflow-y: auto !important;
 }
 
-#nav {
-  padding: 30px;
+* {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.v-toolbar__content {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
