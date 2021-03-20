@@ -3,17 +3,10 @@ import Vue from 'vue'
 export default {
   namespaced: true,
   state: {
-    token: null
   },
   mutations: {
-    SET_TOKEN: (state, token) => {
-      state.token = token
-    }
   },
   getters: {
-    GET_TOKEN: (state) => {
-      return state.token
-    }
   },
   actions: {
     AUTH_LOGIN: async ({ dispatch }, fields) => {
@@ -23,13 +16,15 @@ export default {
       let notification = {}
       
       if (data.success) {
+        const token = data.data.token
+        
         notification = {
           message: data.message,
           type: 'success'
         }
-
-        dispatch('SET_SESSION_TOKEN', data.token, { root: true })
-        dispatch('user/SET_PROFILE', null, { root: true })
+        
+        dispatch('SET_SESSION_TOKEN', token, { root: true })
+        dispatch('user/SET_PROFILE', {}, { root: true })
       } else {
         notification = {
           message: data.message,
@@ -60,7 +55,7 @@ export default {
         email: fields.email,
         username: fields.username
       }
-
+      
       if (data.success) {
         notification = {
           message: data.message,
@@ -69,6 +64,8 @@ export default {
         res = {
           fields: fieldsToReturn
         }
+        
+        dispatch('REDIRECT', '/login', { root: true })
       } else {
         notification = {
           message: data.message,
@@ -89,8 +86,19 @@ export default {
         ...res
       }
     },
-    SET_TOKEN: ({commit}, token) => {
-      commit('SET_TOKEN', token)
-    }
+
+    AUTH_LOGOUT: async ({ dispatch }) => {
+      const response = await Vue.axios.get('/api/logout')
+      const data = response.data
+      
+      const notification = {
+        message: data.message,
+        type: 'success'
+      }
+
+      dispatch('SET_SESSION_TOKEN', null, { root: true })
+      dispatch('user/SET_PROFILE', {}, { root: true })
+      dispatch('notifications/SET_NOTIFICATION', notification, { root: true })
+    },
   }
 }

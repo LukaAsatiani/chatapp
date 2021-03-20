@@ -89,10 +89,10 @@ export default {
       show2: null,
       valid: null,
       fields: {
-        email: 'drdnrn7_1@gmail.com',
-        username: 'drdnrn7_1@gmail.com',
-        password: 'drdnrn7_1@gmail.com',
-        rePassword: 'drdnrn7_1@gmail.com',
+        // email: 'drdnrn7_1@gmail.com',
+        // username: 'drdnrn7_1@gmail.com',
+        // password: 'drdnrn7_1@gmail.com',
+        // rePassword: 'drdnrn7_1@gmail.com',
       },
       fields_error: {
       },
@@ -118,7 +118,10 @@ export default {
     },
     passwordConfirmation () {
       return () => (this.fields.password === this.fields.rePassword) || 'Password must match'
-    }
+    },
+    ...mapGetters('user', {
+      getProfile: 'GET_PROFILE'
+    }),
   },
   methods: {
     ...mapActions('auth', {
@@ -133,15 +136,16 @@ export default {
       if (this.$refs.form.validate()) {
         const response = await this.signup({...this.fields, password_confirmation: this.fields.rePassword})
         
-        if (response.success) {
-          this.$router.push('/')
-        } else {
+        if (!response.success) {
           this.fields = response.fields
           this.$refs.form.validate()
           this.fields_error = response.errors
         }
       }
-    },
+    }
+  },
+  created () {
+    
   }
 }
 </script>

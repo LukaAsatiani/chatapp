@@ -13,6 +13,9 @@ import Default from './layouts/Default'
 import Empty from './layouts/Empty'
 import Notifications from './components/Notifications'
 import Dropdown from './components/Dropdown'
+import Drawer from './components/Drawer'
+import ChatsList from './components/ChatsList'
+import ChatBody from './components/ChatBody'
 
 Vue.use(VueAxios, axios)
 Vue.use(VueSession, { persist: true })
@@ -20,6 +23,9 @@ Vue.config.productionTip = false
 
 Vue.component('c-alert', Notifications)
 Vue.component('c-dropdown', Dropdown)
+Vue.component('c-drawer', Drawer)
+Vue.component('c-chats-list', ChatsList)
+Vue.component('c-chats-body', ChatBody)
 Vue.component('default-layout', Default)
 Vue.component('empty-layout', Empty)
 

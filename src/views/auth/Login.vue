@@ -89,9 +89,9 @@ export default {
     nRules: function () {
       return rulesGenerate(this.rules)
     },
-    ...mapGetters('auth', {
-      token: 'GET_TOKEN'
-    })
+    ...mapGetters('user', {
+      getProfile: 'GET_PROFILE'
+    }),
   },
   methods: {
     ...mapActions('auth', {
@@ -101,18 +101,14 @@ export default {
       if (this.$refs.form.validate()) {
         const response = await this.login(this.fields)
         
-        if (response.success) {
-          this.$router.push('/')
-        } else {
+        if (!response.success) {
           this.fields = response.fields
         }
       }
     },
   },
   created () {
-    if (this.$session.get('token')) {
-      this.$router.push('/')
-    }
+    
   }
 }
 </script>

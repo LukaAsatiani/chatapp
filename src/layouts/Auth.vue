@@ -1,5 +1,5 @@
 <template>
-  <v-col>
+  <v-col v-if="this.getProfile">
     <v-card class="elevation-0 mx-auto" max-width="320" dark color="primary">
       <v-list-item three-line>
         <v-list-item-content>
@@ -17,7 +17,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default ({
-  props: ['title']
+  props: ['title'],
+  computed: {
+    ...mapGetters('user', {
+      getProfile: 'GET_PROFILE'
+    }),
+  },
+  mounted(){
+    
+  }
 })
 </script>

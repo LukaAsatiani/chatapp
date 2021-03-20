@@ -23,35 +23,20 @@ export default {
   },
   methods: {
     ...mapActions ('user', {
-      setProfile: 'SET_PROFILE'
+      setProfile: 'SET_PROFILE',
     }),
-    ...mapActions ('auth', {
-      setToken: 'SET_TOKEN'
-    }),
-    async setProfile_async (){
-      let r = await this.setProfile()
-      if(r)
-        this.logged = true
-    }
+    ...mapActions ({
+      setToken: 'SET_SESSION_TOKEN',
+      redirect: 'REDIRECT'
+    })
   },
-  data: () => ({
-    drawer: null,
-    logged: null,
-    async: null
-  }),
   created() {
-    // this.$session.destroy()
     if(!this.$session.exists()){
       this.$session.start()
-      this.setProfile({logged: false})
-    } else {
-      if (this.$session.get('token')) {
-        this.setToken(this.$session.get('token'))
-        this.setProfile_async()
-      } else {
-        this.setProfile({logged: false})
-      }
     }
+
+    this.setToken(this.$session.get('token'))
+    this.setProfile()
   },
   mounted () {
     window.Echo.channel('chats')
