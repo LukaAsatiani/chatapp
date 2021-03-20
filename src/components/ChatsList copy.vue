@@ -1,12 +1,12 @@
 <template>
     <v-sheet
-      class="primary pa-0 overflow-hidden"
-      height="100vh"
+      class="primary fill-height pa-0 overflow-y-hidden"
       justify="center"
       dark
     >
-      <v-app-bar>
+      <v-toolbar>
         <v-app-bar-nav-icon @click="callbacks.toggleDrawer()"></v-app-bar-nav-icon>
+
         <v-text-field
           class="ml-2"
           hide-details
@@ -18,12 +18,12 @@
           label="Search"
           type="text"
         ></v-text-field>
-      </v-app-bar>
+      </v-toolbar>
+
       
-      <v-main
-        class="c-container fill-height"
+      <v-list
+        
       >
-        <v-content class="c-sidebar">
         <v-list-item
           v-for="(chat, index) in chats"
           :key="index"
@@ -41,9 +41,9 @@
             <v-list-item-subtitle single-line>{{ chat.message }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        </v-content>
-      </v-main>
+      </v-list>
     </v-sheet>
+    
 </template>
 
 <script>
@@ -63,11 +63,6 @@ export default {
         {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
         {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
         {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
       ],
       message: null
     }
@@ -77,35 +72,7 @@ export default {
 </script>
 
 <style scoped>
-  .c-container {
-    width: 100%;
-    position: relative;
-  }
-
-  .c-sidebar {
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 90%;
+  .ovf {
     overflow-y: scroll;
-  }
-
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
   }
 </style>

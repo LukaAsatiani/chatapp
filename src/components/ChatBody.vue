@@ -32,6 +32,7 @@
         align="left"
       >
         <v-text-field
+          hide-details
           class="secondary--text"
           dense
           single-line
@@ -64,7 +65,6 @@
     },
     methods: {
       sendMessage () {
-        this.resetIcon()
         this.clearMessage()
       },
       clearMessage () {
