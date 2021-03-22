@@ -17,6 +17,9 @@ export default {
     ...mapGetters('user', {
       getProfile: 'GET_PROFILE'
     }),
+    ...mapGetters('chat', {
+      getMessages: 'GET_MESSAGES'
+    }),
     layout() {
       return (this.$route.meta.layout || defaultLayout) + '-layout'
     }
@@ -30,19 +33,13 @@ export default {
       redirect: 'REDIRECT'
     })
   },
-  created() {
+  created () {
     if(!this.$session.exists()){
       this.$session.start()
     }
 
     this.setToken(this.$session.get('token'))
     this.setProfile()
-  },
-  mounted () {
-    window.Echo.channel('chats')
-      .listen('Chats', (e) => {
-        console.log(e)
-      })
   }
 }
 </script>

@@ -6,6 +6,7 @@ import uiModules from '@/store/modules/ui'
 import auth from '@/store/modules/auth'
 import user from '@/store/modules/user'
 import notifications from '@/store/modules/notifications'
+import chat from '@/store/modules/chat'
 import router from '../router'
 
 Vue.use(Vuex)
@@ -16,7 +17,8 @@ const store = new Vuex.Store({
     ui: uiModules,
     auth,
     notifications,
-    user
+    user,
+    chat
   },
   actions: {
     SET_SESSION_TOKEN: ({ commit }, token = null) => {

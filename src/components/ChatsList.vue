@@ -5,7 +5,9 @@
       justify="center"
       dark
     >
-      <v-app-bar>
+      <v-app-bar
+        height="64"
+      >
         <v-app-bar-nav-icon @click="callbacks.toggleDrawer()"></v-app-bar-nav-icon>
         <v-text-field
           class="ml-2"
@@ -19,16 +21,24 @@
           type="text"
         ></v-text-field>
       </v-app-bar>
-      
+
       <v-main
+        v-if="chat_list"
         class="c-container fill-height"
       >
-        <v-content class="c-sidebar">
+        <div class="c-sidebar">
         <v-list-item
-          v-for="(chat, index) in chats"
+          v-for="(chat, index) in chat_list"
           :key="index"
+          :disabled="chat.id === selected_chat"
+          :class="chat.id === selected_chat ? 'primary lighten-1' : null"
           link
-          @click="callbacks.openChat(chat)"
+          @click="() => {
+            callbacks.openChat(chat)
+            selected_chat = chat.id
+            setMessagesCount()
+            setMessages(chat.id)
+          }"
         >
           <v-avatar
             class="mr-2 my-2"
@@ -38,39 +48,45 @@
 
           <v-list-item-content>
             <v-list-item-title>{{ chat.title }}</v-list-item-title>
-            <v-list-item-subtitle single-line>{{ chat.message }}</v-list-item-subtitle>
+            <v-list-item-subtitle single-line>{{ '' }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        </v-content>
+        </div>
       </v-main>
     </v-sheet>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   data () {
     return {
-      chats: [
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-        {avatar: 'JD', title: 'John Doe', message: 'sfs dfsdf sdew wef. fefe! Hello, Friend!'},
-        {avatar: 'L', title: 'Group - Laravel', message: 'Hello, friend!!'},
-      ],
-      message: null
+      message: null,
+      selected_chat: null,
     }
+  },
+  computed: {
+    ...mapGetters('chat', {
+      chat_list: 'GET_CHAT_LIST'
+    })
+  },
+  methods: {
+    ...mapActions('chat', {
+      setChatList: 'SET_CHAT_LIST',
+      setMessages: 'SET_MESSAGES',
+      setMessagesCount: 'SET_MESSAGES_COUNT'
+    })
+  },
+  created () {
+    this.setChatList()
+  },
+  mounted () {
+    window.Echo.channel('chats')
+      .listen('Rooms', (e) => {
+        console.log(e)
+        // this.appendMessage(e)
+      })
   },
   props: ['callbacks']
 }
@@ -96,16 +112,18 @@ export default {
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: transparent;
+    border-radius: 10px;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #1c7e72;
+    border-radius: 10px;
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: hsl(174, 74%, 20%);
   }
 </style>

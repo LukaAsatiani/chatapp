@@ -16,6 +16,7 @@ import Dropdown from './components/Dropdown'
 import Drawer from './components/Drawer'
 import ChatsList from './components/ChatsList'
 import ChatBody from './components/ChatBody'
+import CreateRoom from './components/windows/CreateRoom'
 
 Vue.use(VueAxios, axios)
 Vue.use(VueSession, { persist: true })
@@ -26,6 +27,7 @@ Vue.component('c-dropdown', Dropdown)
 Vue.component('c-drawer', Drawer)
 Vue.component('c-chats-list', ChatsList)
 Vue.component('c-chats-body', ChatBody)
+Vue.component('c-create-room-window', CreateRoom)
 Vue.component('default-layout', Default)
 Vue.component('empty-layout', Empty)
 
