@@ -81,29 +81,29 @@
                 class="ma-0 mb-1 pa-1 primary float-left"
                 max-width="80%"
               > 
-                <span
-                  class="font-weight-bold accent--text"
-                >
-                  {{message.sender.username}}
-                </span>
-                <br/>
-                <span class="white--text">
-                  {{message.content}}
-                </span>
-              </v-card>
+              <span
+                class="font-weight-bold accent--text"
+              >
+                {{message.sender.username}}
+              </span>
+              <br/>
+              <span class="white--text">
+                {{message.content}}
+              </span>
+            </v-card>
           </v-sheet>
           <v-sheet
             v-else
             width="70%"
             class="transparent float-right"
           >
-              <v-card
-                class="ma-0 mb-1 pa-1 secondary float-right"
-              >
-                <span class="white--text">
-                  {{message.content}}
-                </span>
-              </v-card>
+            <v-card
+              class="ma-0 mb-1 pa-1 secondary float-right"
+            >
+              <span class="white--text">
+                {{message.content}}
+              </span>
+            </v-card>
           </v-sheet>  
         </v-card>
       </v-sheet>
@@ -151,7 +151,7 @@
         marker: true,
         iconIndex: 0,
       }
-    },  
+    },
     computed: {
       ...mapGetters('chat', {
         messages: 'GET_MESSAGES',
@@ -190,8 +190,9 @@
       }, 200)
     },
     mounted () {
-      window.Echo.channel('chats')
+      window.Echo.channel(`room_${this.chat['id']}`)
         .listen('Messages', (e) => {
+          console.log(e)
           this.appendMessage(e)
         })
     }
@@ -199,36 +200,14 @@
 </script>
 
 <style scoped>
-  .v-text-field:not(.error--text) .v-text-field__details { display: none }
-  
   .chat-body {
     height: calc(100vh - 120px);
     overflow: hidden;
   }
   
   .scrollable {
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 100%;
   }
 
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 10px;
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #1c7e72;
-    border-radius: 10px;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: hsl(174, 74%, 20%);
-  }
 </style>

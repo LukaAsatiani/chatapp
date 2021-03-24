@@ -29,35 +29,50 @@ export default {
       setProfile: 'SET_PROFILE',
     }),
     ...mapActions ({
+      startSession: 'START_SESSION',
       setToken: 'SET_SESSION_TOKEN',
       redirect: 'REDIRECT'
     })
-  },
-  created () {
-    if(!this.$session.exists()){
-      this.$session.start()
-    }
-
-    this.setToken(this.$session.get('token'))
-    this.setProfile()
   }
 }
 </script>
 
 <style>
-html {
-  overflow-y: auto !important;
-}
 
-* {
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+  html {
+    overflow-y: auto !important;
+  }
 
-.v-toolbar__content {
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-}
+  * {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .v-toolbar__content {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #1c7e72;
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(174, 74%, 20%);
+  }
 
 </style>

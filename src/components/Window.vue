@@ -6,7 +6,7 @@
     class="position-fixed"
     transition="dialog-transition"
   >
-    <slot :close="close" variable="sdfdgdfg"/>
+    <slot :close="close"/>
   </v-dialog>
 </template>
 
@@ -27,7 +27,6 @@ export default {
   },
   methods: {
     close () {
-      console.log("ggg")
       this.$emit('input', false)
     }
   }

@@ -6,7 +6,7 @@
     class="primary lighten-1"
   >
     <v-sheet
-      color="secondary"
+      color="secondary darken-2"
       class="pa-4"
     >
       <v-avatar
@@ -59,8 +59,11 @@ export default {
   data () {
     return {
       menu: [
-        {icon: 'mdi-account', title: 'Dialogs', callback: null},
-        {icon: 'mdi-account-group', title: 'Groups', callback: () => {
+        {icon: 'mdi-account-search', title: 'Search room', callback: () => {
+          this.callbacks.showWindow('c-search-room-window')
+          this.$emit('input', false)
+        }},
+        {icon: 'mdi-account-multiple-plus', title: 'Create room', callback: () => {
           this.callbacks.showWindow('c-create-room-window')
           this.$emit('input', false)
         }},

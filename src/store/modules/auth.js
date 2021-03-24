@@ -24,7 +24,8 @@ export default {
         }
         
         dispatch('SET_SESSION_TOKEN', token, { root: true })
-        dispatch('user/SET_PROFILE', {}, { root: true })
+        await dispatch('user/SET_PROFILE', {}, { root: true })
+        dispatch('REDIRECT', '/', { root: true })
       } else {
         notification = {
           message: data.message,
@@ -96,8 +97,9 @@ export default {
         type: 'success'
       }
 
-      dispatch('SET_SESSION_TOKEN', null, { root: true })
+      dispatch('CLEAR_SESSION_TOKEN', {}, { root: true })
       dispatch('user/SET_PROFILE', {}, { root: true })
+      dispatch('REDIRECT', '/login', { root: true })
       dispatch('notifications/SET_NOTIFICATION', notification, { root: true })
     },
   }

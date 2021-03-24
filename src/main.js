@@ -17,6 +17,7 @@ import Drawer from './components/Drawer'
 import ChatsList from './components/ChatsList'
 import ChatBody from './components/ChatBody'
 import CreateRoom from './components/windows/CreateRoom'
+import SearchRoom from './components/windows/SearchRoom'
 
 Vue.use(VueAxios, axios)
 Vue.use(VueSession, { persist: true })
@@ -28,6 +29,7 @@ Vue.component('c-drawer', Drawer)
 Vue.component('c-chats-list', ChatsList)
 Vue.component('c-chats-body', ChatBody)
 Vue.component('c-create-room-window', CreateRoom)
+Vue.component('c-search-room-window', SearchRoom)
 Vue.component('default-layout', Default)
 Vue.component('empty-layout', Empty)
 

@@ -5,10 +5,12 @@
   > 
     <Drawer v-model="drawer" :callbacks="{showWindow, closeWindow}"/>
     <Window v-model="window.show">
-      <component :is="window.component" />
+      <template scope="props">
+        <component :is="window.component" :close="props.close"/>
+      </template>
     </Window>
     <ChatBodyWindow v-model="chat_window">
-      <c-chats-body class="fill-height" v-if="currentChat" :callbacks="{back}" :chat="currentChat"/>
+      <c-chats-body class="fill-height" v-if="openedChat" :callbacks="{back}" :chat="openedChat"/>
     </ChatBodyWindow>
     <v-col
       cols="12"
@@ -20,13 +22,14 @@
     <v-col
       v-if="!$vuetify.breakpoint.xsOnly"
       class="pa-0"
+      sm="8"
     >
       <v-sheet
         class="primary lighten-2 fill-height pa-0"
         justify="center"
         dark
       >
-        <c-chats-body class="fill-height" v-if="currentChat" :chat="currentChat"/>
+        <c-chats-body class="fill-height" v-if="openedChat" :chat="openedChat"/>
       </v-sheet>
     </v-col>
   </v-row>
@@ -53,12 +56,7 @@ export default {
       },
       chat_window: false,
       drawer: null,
-      menu: [
-        {icon: 'mdi-account', title: 'Dialogs', callback: null},
-        {icon: 'mdi-account-group', title: 'Groups', callback: null},
-        {icon: 'mdi-logout', title: 'Logout', callback: this.logout}
-      ],
-      currentChat: null
+      openedChat: null
     }
   },
   computed: {
@@ -71,7 +69,7 @@ export default {
       this.drawer = !this.drawer
     },
     openChat (chat) {
-      this.currentChat = chat
+      this.openedChat = chat
       this.chat_window = true
     },
     showWindow (component) {
@@ -94,10 +92,6 @@ export default {
     }),
     ...mapActions ('user', {
       setProfile: 'SET_PROFILE',
-    }),
-    ...mapActions ({
-      setToken: 'SET_SESSION_TOKEN',
-      redirect: 'REDIRECT'
     })
   }  
 }

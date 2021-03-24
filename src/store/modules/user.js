@@ -13,7 +13,10 @@ export default {
   getters: {
     GET_PROFILE: (state) => {
       return state.user
-    }
+    },
+    TEST2: () => {
+      return 2
+    },
   },
   actions: {
     SET_PROFILE: async ({ commit, dispatch }) => {
@@ -24,15 +27,12 @@ export default {
         
         if (data.success) {
           commit('SET_PROFILE', {...data.data, logged: true})
-          dispatch('REDIRECT', '/', { root: true })
         } else {
           commit('SET_PROFILE', {logged: false})
-          dispatch('SET_SESSION_TOKEN', null, { root: true })
-          dispatch('REDIRECT', '/login', { root: true })
+          dispatch('CLEAR_SESSION_TOKEN', {}, { root: true })
         }
       } else {
         commit('SET_PROFILE', {logged: false})
-        dispatch('REDIRECT', '/login', { root: true })
       }
     }
   }

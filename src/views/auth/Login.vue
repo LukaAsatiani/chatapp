@@ -74,9 +74,9 @@ export default {
       show: null,
       valid: null,
       fields: {
-        checkbox: true,
-        email: 'drdnrn7_1@gmail.com',
-        password: 'nhbhdfbjdhhdf'
+        checkbox: false,
+        email: '',
+        password: ''
       },
       rules: {
         email: 'required|email',
@@ -88,10 +88,7 @@ export default {
   computed: {
     nRules: function () {
       return rulesGenerate(this.rules)
-    },
-    ...mapGetters('user', {
-      getProfile: 'GET_PROFILE'
-    }),
+    }
   },
   methods: {
     ...mapActions('auth', {
