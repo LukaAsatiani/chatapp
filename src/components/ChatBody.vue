@@ -140,7 +140,7 @@
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
-
+  
   export default {
     props: ['chat', 'callbacks'],
     data () {
@@ -163,14 +163,12 @@
     },
     methods: {
       ...mapActions('chat', {
-        send: 'SEND_MESSAGE'
-      }),  
-      ...mapActions('chat', {
+        send: 'SEND_MESSAGE',
         appendMessage: 'APPEND_MESSAGE'
       }),
       sendMessage () {
         if(this.message !== ''){
-          // this.messages[Object.keys(this.messages).length] = {content: this.message, sender_id: this.user.id}
+          this.messages.push({content: this.message, sender_id: this.user.id})
           this.send({sender_id: this.user.id, room_id: this.chat['id'], content: this.message})
           this.scrollBottom()
           this.clearMessage()
@@ -181,7 +179,8 @@
       },
       scrollBottom () {
         if(Object.keys(this.messages).length > 0)
-          document.getElementsByClassName('scrollable')[0].scrollTo(0, document.getElementsByClassName('scrollable')[0].scrollHeight)
+          document.getElementsByClassName('scrollable')[0].scrollTo(0, 99999)
+        // document.getElementsByClassName('scrollable')[0].scrollHeight
       }
     },
     beforeUpdate () {
@@ -190,11 +189,6 @@
       }, 200)
     },
     mounted () {
-      window.Echo.channel(`room_${this.chat['id']}`)
-        .listen('Messages', (e) => {
-          console.log(e)
-          this.appendMessage(e)
-        })
     }
   }
 </script>

@@ -57,7 +57,7 @@
             max-width="50"
           >
             <v-list-item-subtitle>
-              {{chat.connector[0].unread_count}}
+              {{chat.connector && chat.connector[0].unread_count !== 0 ? chat.connector[0].unread_count : null}}
             </v-list-item-subtitle>
           </v-sheet>
         </v-list-item>
@@ -99,7 +99,7 @@ export default {
   mounted () {
     window.Echo.channel(`user_${this.user['id']}`)
       .listen('Rooms', (e) => {
-        this.appendChat(e)
+        this.setChatList(e.data)
       })
   },
   props: ['callbacks']

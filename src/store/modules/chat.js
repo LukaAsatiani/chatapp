@@ -17,7 +17,7 @@ export default {
       state.search_chat_list = list
     },
     SET_MESSAGES: (state, messages) => {
-      state.messages = messages
+      state.messages = Object.values(messages).reverse()
       state.messages_count = Object.keys(messages).length
     },
     SET_MESSAGES_COUNT: (state, data) => {
@@ -26,7 +26,7 @@ export default {
     APPEND_MESSAGE: (state, data) => {
       state.messages_count = Object.keys(data.messages).length
       // state.messages[state.messages_count - 1] = message.message
-      state.messages = data.messages
+      state.messages = Object.values(data.messages).reverse()
     },
     APPEND_CHAT: (state, data) => {
       state.rooms_count = Object.keys(state.chat_list).length + 1
@@ -73,7 +73,12 @@ export default {
       
       return {success: data.success, fields: {}}
     },
-    SET_CHAT_LIST: async ({ commit, dispatch }) => {
+    SET_CHAT_LIST: async ({ commit, dispatch }, ch_data = null) => {
+      if(ch_data){
+        commit('SET_CHAT_LIST', {...ch_data})
+        return
+      }
+
       const response = await Vue.axios.get('/api/rooms', { validateStatus: () => true })
       const data = response.data
       
