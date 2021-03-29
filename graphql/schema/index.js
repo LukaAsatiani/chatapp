@@ -64,7 +64,7 @@ module.exports = buildSchema(`
   }
 
   type Mutation {
-    createUser(fields: UserInput!): UserResponse!
+    createUser(fields: UserInput!): AuthDataResponse!
     updateUser(id: Int, fields: UpdateUserInput!): UserResponse!
     removeUser(id: Int): UserResponse!
     logout: MessageResponse!

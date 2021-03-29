@@ -1,7 +1,6 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 
-const apiRoutes = require('./routes/apiRoutes');
 const resolver = require('./graphql/resolvers');
 const schema = require('./graphql/schema');
 const isAuth = require('./middleware/isAuth');
@@ -23,8 +22,6 @@ app.use('/graphql', graphqlHTTP({
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use('/api', apiRoutes);
-
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {

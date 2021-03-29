@@ -61,8 +61,21 @@ module.exports = {
     try {
       const hashedPassword = await bcrypt.hash(fields.password, 12);
       const new_user = await db.user.create({ ...fields, password: hashedPassword, logout_count: 0})
+      
+      const token = jwt.sign(
+        { email: new_user.email, logout_count: 0, user_id: new_user.id },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '1h'
+        }
+      );
+      
       return {
         ok: true,
+        token: {
+          user_id: new_user.id,
+          value: token
+        },
         user: new_user
       }
     } catch (e) {
