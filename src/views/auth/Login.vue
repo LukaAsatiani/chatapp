@@ -7,18 +7,19 @@
       class="px-3"
     >
       <v-text-field
+        class="my-2"
+        hide-details
         autocomplete="off"
         spellcheck="false"
         label='Email'
         name='email'
         prepend-icon='mdi-email'
         type='text'
-        :rules="nRules['email']"
-        :success="nRules['email'] && fields['email'] ? true : false"
         v-model="fields['email']"
       ></v-text-field>
 
       <v-text-field
+        hide-details
         autocomplete="off"
         spellcheck="false"
         label='Password'
@@ -27,29 +28,34 @@
         :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
         :type="show ? 'text' : 'password'"
         @click:append="show = !show"
-        :rules="nRules['password']"
-        :success="nRules['password'] && fields['password'] ? true : false"
         v-model="fields['password']"
       ></v-text-field>
       
-      <v-checkbox
-        v-model="fields['checkbox']"
-        :rules="nRules['checkbox']"
-        :success="nRules['checkbox'] && fields['checkbox'] ? true : false"
-        label="Remember me?"
-        required
-      ></v-checkbox>
-      
-      <v-card-actions class="mb-2 pa-0">
+      <v-card-actions class="my-3 pa-0">
         <router-link to="/password/restore" class="link--text text-decoration-none">
           Forget password?
         </router-link>
         <v-spacer></v-spacer>
-        <v-btn @click="validate" color="link">Login</v-btn>
+        <v-btn 
+          @click="submit" color="link" 
+          :disabled="disabled"
+          width = "100"
+        >
+          <div v-if="disabled">
+            <v-progress-circular
+              indeterminate
+              :size="20"
+              color="link"
+            ></v-progress-circular>
+          </div>
+          <div v-else>
+            Login
+          </div>
+        </v-btn>
       </v-card-actions>
       <div>
         <span>
-          Dont have an acccount?
+          Don't have an acccount?
         </span>
         <router-link to="/signup" class="link--text text-decoration-none">
           Register
@@ -61,8 +67,8 @@
 
 <script>
 import Auth from '@/layouts/Auth'
-import rulesGenerate from '@/validation/rules'
 import { mapActions, mapGetters } from 'vuex'
+import { validate } from '@/validation'
 
 export default {
   name: 'Login',
@@ -73,34 +79,41 @@ export default {
     return {
       show: null,
       valid: null,
+      disabled: null,
       fields: {
-        checkbox: false,
-        email: '',
-        password: ''
+        email: 'Drainkoron2@gmail.com',
+        password: '1234567890'
       },
       rules: {
         email: 'required|email',
         password: 'required|min:8|max:1024',
-        checkbox: 'required'
       }
-    }
-  },
-  computed: {
-    nRules: function () {
-      return rulesGenerate(this.rules)
     }
   },
   methods: {
     ...mapActions('auth', {
       login: 'AUTH_LOGIN'
     }),
-    async validate () {
-      if (this.$refs.form.validate()) {
-        const response = await this.login(this.fields)
+    ...mapActions('notifications', {
+      setNotification: 'SET_NOTIFICATION'
+    }),
+    async submit () {
+      const validation = validate(this.fields, this.rules)
+      
+      if(!validation.ok){
+        this.setNotification({
+          type: 'error',
+          message: validation.error
+        })
+        return
+      }
+
+      this.disabled = true
+      const res = await this.login(this.fields)
         
-        if (!response.success) {
-          this.fields = response.fields
-        }
+      if (!res.ok) {
+        this.fields = res.fields
+        this.disabled = false
       }
     },
   },

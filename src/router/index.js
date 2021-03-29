@@ -55,33 +55,29 @@ const router = new VueRouter({
   routes
 })
 
-// async function startSession(){
-//   return await store.dispatch('START_SESSION')
-// }
+router.beforeEach( async (to, from, next) => {
+  // store.dispatch('auth/AUTH_LOGIN')
 
-router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.guard)) {
-    store.dispatch('START_SESSION').then(() => {
-      if(store.getters['user/GET_PROFILE'].logged){
-        if(to.meta.needAuth){
-          next()
-        }
-        else {
-          next({name: 'main'})
-        }
-      }
-      else {
-        if(to.meta.needAuth){
-          next({name: 'login'})
-        }
-        else {
-          next()
-        }
-      }
-    })
-  } else {
+    const check = async () => {
+      if(!localStorage.token)
+        return false
+      
+      return await store.dispatch('START_SESSION')
+    }
+
+    const logged = await check()
+    
+    if (logged && !to.meta.needAuth)
+      next({name: 'main'})
+    
+    if (!logged && to.meta.needAuth)
+      next({name: 'login'})
+    
     next()
   }
+    
+  next()
 })
 
 export default router

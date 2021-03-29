@@ -77,21 +77,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('chat', {
-      chat_list: 'GET_CHAT_LIST',
-      rooms_count: 'GET_ROOMS_COUNT'
-    }),
+    // ...mapGetters('chat', {
+    //   chat_list: 'GET_CHAT_LIST',
+    //   rooms_count: 'GET_ROOMS_COUNT'
+    // }),
     ...mapGetters('user', {
       user: 'GET_PROFILE'
     }),
   },
   methods: {
-    ...mapActions('chat', {
-      setChatList: 'SET_CHAT_LIST',
-      setMessages: 'SET_MESSAGES',
-      setMessagesCount: 'SET_MESSAGES_COUNT',
-      appendChat: 'APPEND_CHAT'
-    })
+    // ...mapActions('chat', {
+    //   setChatList: 'SET_CHAT_LIST',
+    //   setMessages: 'SET_MESSAGES',
+    //   setMessagesCount: 'SET_MESSAGES_COUNT',
+    //   appendChat: 'APPEND_CHAT'
+    // })
   },
   created () {
     this.setChatList()

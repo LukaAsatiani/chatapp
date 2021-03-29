@@ -8,31 +8,17 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
 const defaultLayout = 'default'
 
 export default {
   name: 'App',
   computed: {
-    ...mapGetters('user', {
-      getProfile: 'GET_PROFILE'
-    }),
-    ...mapGetters('chat', {
-      getMessages: 'GET_MESSAGES'
-    }),
     layout() {
       return (this.$route.meta.layout || defaultLayout) + '-layout'
     }
   },
   methods: {
-    ...mapActions ('user', {
-      setProfile: 'SET_PROFILE',
-    }),
-    ...mapActions ({
-      startSession: 'START_SESSION',
-      setToken: 'SET_SESSION_TOKEN',
-      redirect: 'REDIRECT'
-    })
+    
   }
 }
 </script>

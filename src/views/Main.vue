@@ -1,6 +1,6 @@
 <template>
   <v-row
-    class="fill-height ma-0 d-flex" 
+    class="fill-height ma-0 d-flex"
     v-if="getProfile"
   > 
     <Drawer v-model="drawer" :callbacks="{showWindow, closeWindow}"/>
@@ -68,19 +68,7 @@ export default {
     toggleDrawer () {
       this.drawer = !this.drawer
     },
-    ...mapActions('chat', {
-      appendMessage: 'APPEND_MESSAGE'
-    }),
     openChat (chat) {
-      if(this.openedChat && this.openedChat.id)
-        window.Echo.leave(`room_${this.openedChat.id}`)
-
-      window.Echo.channel(`room_${chat['id']}`)
-      .listen('Messages', (e) => {
-        // console.log(Object.values(e.messages).reverse(), e.messages)
-        this.appendMessage(e)
-      })
-
       this.openedChat = chat
       this.chat_window = true
     },
@@ -99,12 +87,6 @@ export default {
     back () {
       this.chat_window = false
     },
-    ...mapActions('auth', {
-      logout: 'AUTH_LOGOUT'
-    }),
-    ...mapActions ('user', {
-      setProfile: 'SET_PROFILE',
-    })
   }  
 }
 </script>

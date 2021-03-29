@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { gql } from '@/helpers/index'
 
 export default {
   namespaced: true,
@@ -9,98 +10,87 @@ export default {
   getters: {
   },
   actions: {
-    AUTH_LOGIN: async ({ dispatch }, fields) => {
-      const response = await Vue.axios.post('/api/login', fields, { validateStatus: () => true })
-      const data = response.data
-
-      let notification = {}
+    AUTH_LOGIN: async ({dispatch}, fields) => {
+      const res = await gql.query(`
+        ($email: String!, $password: String!) {
+          login (email: $email, password: $password) 
+            { ok token { value user_id } message }}`,
+        {
+          email: fields.email,
+          password: fields.password
+        }
+      )
       
-      if (data.success) {
-        const token = data.data.token
-        
-        notification = {
-          message: data.message,
-          type: 'success'
-        }
-        
-        dispatch('SET_SESSION_TOKEN', token, { root: true })
-        await dispatch('user/SET_PROFILE', {}, { root: true })
+      if( res.ok ){
+        dispatch('SET_TOKEN', res.token.value, { root: true })
+        await dispatch('START_SESSION', {}, { root: true })
         dispatch('REDIRECT', '/', { root: true })
-      } else {
-        notification = {
-          message: data.message,
-          type: 'error'
-        }
+        return res
       }
 
-      dispatch('notifications/SET_NOTIFICATION', notification, { root: true })
-      return {success: data.success, fields: {email: fields.email}}
+      dispatch('notifications/SET_NOTIFICATION', 
+        {
+          message: res.message,
+          type: 'error'
+        },
+        { root: true })
+
+      return {ok: res.ok, fields: {
+        email: fields.email
+      }}
     },
     
     AUTH_SIGNUP: async ({ dispatch }, fields) => {
-      const response = await Vue.axios.post('/api/signup', fields, { validateStatus: () => true })
-      const data = response.data
-
-      const filterWithErrors = (array1, array2) => {
-        const array = []
-        for (let [key, value] of Object.entries(array1)){
-          if(array2[key] === undefined)
-            array[key] = value
+      const res = await gql.mutation(`
+        ($email: String!, $username: String!, $password: String!) 
+          { createUser(fields: {email: $email, username: $username, password: $password})
+            { ok token { value } errors { path validatorKey } message}}`,
+        {
+          email: fields.email,
+          username: fields.username,
+          password: fields.password
         }
-        return array
-      }
-
-      let notification = {}
-      let res = {}
-      let fieldsToReturn = {
-        email: fields.email,
-        username: fields.username
-      }
+      )
       
-      if (data.success) {
-        notification = {
-          message: data.message,
-          type: 'success'
-        }
-        res = {
-          fields: fieldsToReturn
-        }
-        
-        dispatch('REDIRECT', '/login', { root: true })
-      } else {
-        notification = {
-          message: data.message,
+      if( res.ok ){
+        dispatch('SET_TOKEN', res.token.value, { root: true })
+        await dispatch('START_SESSION', {}, { root: true })
+        dispatch('REDIRECT', '/', { root: true })
+        return res
+      }
+
+      let msg = `${res.errors[0]['path']}.${res.errors[0]['validatorKey']}` || res.message
+      
+      dispatch('notifications/SET_NOTIFICATION', 
+        {
+          message: msg,
           type: 'error'
-        }
-        res = {
-          errors: data.errors,
-          fields: filterWithErrors(
-            fieldsToReturn,
-            data.errors
-          )
-        }
-      }
-      
-      dispatch('notifications/SET_NOTIFICATION', notification, { root: true })
+        },
+        { root: true })
+
       return {
-        success: data.success,
-        ...res
+        ...res,
+        fields: {
+          email: fields.email
+        }
       }
     },
 
     AUTH_LOGOUT: async ({ dispatch }) => {
-      const response = await Vue.axios.get('/api/logout')
-      const data = response.data
-      
-      const notification = {
-        message: data.message,
-        type: 'success'
-      }
+      const res = await gql.mutation(`
+        {
+          logout {
+            ok
+            message
+          }
+        }
+      `)
 
-      dispatch('CLEAR_SESSION_TOKEN', {}, { root: true })
-      dispatch('user/SET_PROFILE', {}, { root: true })
-      dispatch('REDIRECT', '/login', { root: true })
-      dispatch('notifications/SET_NOTIFICATION', notification, { root: true })
+      if( res.ok ){
+        dispatch('user/SET_PROFILE', null, { root: true })
+        dispatch('SET_TOKEN', null, { root: true })
+        dispatch('REDIRECT', '/login', { root: true })
+      }
     },
   }
 }

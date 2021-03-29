@@ -4,11 +4,11 @@ module.exports = {
   ],
   devServer: {
     'proxy': {
-      '^/api': { 
-        target: 'http://192.168.0.107:8000/', 
+      '^/graphql': { 
+        target: 'http://localhost:3000', 
         changeOrigin: true, 
         secure:false, 
-        pathRewrite: {'^/api': '/api'}, 
+        pathRewrite: {'^/graphql': '/graphql'},
         logLevel: 'debug' 
       },
     }

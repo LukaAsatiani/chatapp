@@ -2,11 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
-import uiModules from '@/store/modules/ui'
 import auth from '@/store/modules/auth'
 import user from '@/store/modules/user'
 import notifications from '@/store/modules/notifications'
-import chat from '@/store/modules/chat'
+import { gql } from '@/helpers/index'
 import router from '../router'
 
 Vue.use(Vuex)
@@ -14,32 +13,22 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   namespaced: true,
   modules: {
-    ui: uiModules,
     auth,
     notifications,
-    user,
-    chat
+    user
   },
   actions: {
-    SET_SESSION_TOKEN: ({ commit }, token = null) => {
-      if(token)
-        store._vm.$session.set('token', token)
+    START_SESSION: async ({dispatch}) => {
+      const res = await gql.query(`{getUser { ok user { id username email createdAt updatedAt } message }}`)
       
-      if(store._vm.$session.get('token'))
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + store._vm.$session.get('token')
-    },
-    CLEAR_SESSION_TOKEN: () => {
-      store._vm.$session.remove('token')
-      axios.defaults.headers.common['Authorization'] = null
-    },
-    START_SESSION: async ({ dispatch }) => {
-      if(!store._vm.$session.exists()){
-        store._vm.$session.start()
+      if( res.ok ){
+        dispatch('user/SET_PROFILE', res.user)
       }
-  
-      dispatch('SET_SESSION_TOKEN', null, { root: true })
-      await dispatch('user/SET_PROFILE', null, { root: true })
-      return
+
+      return res.ok
+    },
+    SET_TOKEN: ({}, value = null) => {
+      localStorage.token = value
     },
     REDIRECT: ({state}, url) => {
       if(url !== router.history.current.path)
@@ -47,9 +36,7 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    TEST: (state) => {
-      return 1
-    }
+    
   }
 })
 
