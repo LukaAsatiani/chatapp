@@ -36,9 +36,9 @@ module.exports = (sequelize, DataTypes) => {
     logout_count: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
-    profile_image: {
+    image: {
       type: DataTypes.STRING,
-    },
+    }
   }, {
     sequelize,
     modelName: 'user',

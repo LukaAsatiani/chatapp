@@ -1,6 +1,8 @@
 const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
+  scalar FileUpload
+
   type Error {
     validatorKey: String!
     path: String!
@@ -11,6 +13,7 @@ module.exports = buildSchema(`
     id: Int!
     username: String!
     email: String!
+    image: String!
     createdAt: String!
     updatedAt: String!
   }
@@ -24,6 +27,7 @@ module.exports = buildSchema(`
   input UpdateUserInput {
     username: String
     password: String
+    image: String
   }
 
   type UsersResponse {
@@ -56,6 +60,10 @@ module.exports = buildSchema(`
     errors: [Error]
     message: String
   }
+  
+  type Response {
+    ok: Boolean!
+  }
 
   type Query {
     getUsers: UsersResponse!,
@@ -67,6 +75,7 @@ module.exports = buildSchema(`
     createUser(fields: UserInput!): AuthDataResponse!
     updateUser(id: Int, fields: UpdateUserInput!): UserResponse!
     removeUser(id: Int): UserResponse!
+    uploadImage(image: FileUpload!): Response!
     logout: MessageResponse!
   }
 `)
