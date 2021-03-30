@@ -9,11 +9,11 @@
       color="secondary darken-2"
       class="pa-4"
     >
-      <v-avatar
-        class="mb-4"
-        color="grey darken-1"
-        size="64"
-      ></v-avatar>
+        <div
+          class="avatar-container"
+        > 
+          <img :src="getProfile.image" class="c-avatar"/>
+        </div>
 
       <v-list-item
         dark
@@ -92,6 +92,27 @@ export default {
     ...mapActions('auth', {
       logout: 'AUTH_LOGOUT'
     })
+  },
+  mounted(){
+    console.log(this.getProfile)
   }
 }
 </script>
+
+<style scoped>
+
+  .avatar-container {
+    position: relative;
+    height: 64px;
+    width: 64px;
+    border-radius: 50%;
+    border: 1px solid #2196fc;
+    box-shadow: inset 0 0 20px 10px #313131;
+    overflow: hidden;
+  }
+  
+  .c-avatar {
+    height: 100%;
+  }
+
+</style>

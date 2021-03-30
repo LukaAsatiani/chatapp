@@ -77,10 +77,10 @@
               color="grey darken-1"
               size="32"
             ></v-avatar>
-              <v-card
-                class="ma-0 mb-1 pa-1 primary float-left"
-                max-width="80%"
-              > 
+            <v-card
+              class="ma-0 mb-1 pa-1 primary float-left"
+              max-width="80%"
+            > 
               <span
                 class="font-weight-bold accent--text"
               >

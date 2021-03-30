@@ -14,44 +14,44 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-toolbar>
-      <v-row
-        class="fill-height px-3 ma-0"
-      >
-        <v-col cols="12" class="text-center">
-          <v-avatar
-            class="mx-auto"
-            color="grey darken-1"
-            size="96"
-          ></v-avatar>
-          <v-form
-            ref="form"
-            v-model="valid"
+    <v-row
+      class="fill-height px-3 ma-0"
+    >
+      <v-col cols="12" class="text-center">
+        <v-avatar
+          class="mx-auto"
+          color="grey darken-1"
+          size="96"
+        ></v-avatar>
+        <v-form
+          ref="form"
+          v-model="valid"
+        >
+          <v-text-field
+            autocomplete="off"
+            spellcheck="false"
+            class="secondary--text mt-4 pa-0"
+            height="40"
+            single-line
+            label="Room title"
+            type="text"
+            :rules="nRules['title']"
+            v-model="fields['title']"
+          ></v-text-field>
+        </v-form>
+        <div
+          class="error"
+          width="100%"
+        >
+          <v-btn
+            class="secondary darken-2 float-right mt-3"
+            @click="validate"
           >
-            <v-text-field
-              autocomplete="off"
-              spellcheck="false"
-              class="secondary--text mt-4 pa-0"
-              height="40"
-              single-line
-              label="Room title"
-              type="text"
-              :rules="nRules['title']"
-              v-model="fields['title']"
-            ></v-text-field>
-          </v-form>
-          <div
-            class="error"
-            width="100%"
-          >
-            <v-btn
-              class="secondary darken-2 float-right mt-3"
-              @click="validate"
-            >
-              Create
-            </v-btn>
-          </div>
-        </v-col>
-      </v-row>
+            Create
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
   </v-card>      
 </template>
 

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 
 import auth from '@/store/modules/auth'
 import user from '@/store/modules/user'
@@ -19,12 +18,12 @@ const store = new Vuex.Store({
   },
   actions: {
     START_SESSION: async ({dispatch}) => {
-      const res = await gql.query(`{getUser { ok user { id username email createdAt updatedAt } message }}`)
+      const res = await gql.query(`query { getUser  { ok user { id username email createdAt updatedAt } message}}`)
       
+      console.log('Start_Session', res)
       if( res.ok ){
         dispatch('user/SET_PROFILE', res.user)
       }
-
       return res.ok
     },
     SET_TOKEN: ({}, value = null) => {

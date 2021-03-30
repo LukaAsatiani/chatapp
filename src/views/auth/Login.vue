@@ -1,5 +1,5 @@
 <template>
-  <Auth title="Login">
+  <Auth title="Authorization">
     <v-form
       ref="form"
       v-model="valid"

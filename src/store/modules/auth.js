@@ -12,7 +12,7 @@ export default {
   actions: {
     AUTH_LOGIN: async ({dispatch}, fields) => {
       const res = await gql.query(`
-        ($email: String!, $password: String!) {
+        query ($email: String!, $password: String!) {
           login (email: $email, password: $password) 
             { ok token { value user_id } message }}`,
         {
@@ -41,8 +41,8 @@ export default {
     },
     
     AUTH_SIGNUP: async ({ dispatch }, fields) => {
-      const res = await gql.mutation(`
-        ($email: String!, $username: String!, $password: String!) 
+      const res = await gql.query(`
+        mutation ($email: String!, $username: String!, $password: String!) 
           { createUser(fields: {email: $email, username: $username, password: $password})
             { ok token { value } errors { path validatorKey } message}}`,
         {
@@ -55,7 +55,6 @@ export default {
       if( res.ok ){
         dispatch('SET_TOKEN', res.token.value, { root: true })
         await dispatch('START_SESSION', {}, { root: true })
-        dispatch('REDIRECT', '/', { root: true })
         return res
       }
 
@@ -77,8 +76,8 @@ export default {
     },
 
     AUTH_LOGOUT: async ({ dispatch }) => {
-      const res = await gql.mutation(`
-        {
+      const res = await gql.query(`
+        mutation {
           logout {
             ok
             message
@@ -91,6 +90,6 @@ export default {
         dispatch('SET_TOKEN', null, { root: true })
         dispatch('REDIRECT', '/login', { root: true })
       }
-    },
+    }
   }
 }

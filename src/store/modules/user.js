@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { gql } from '@/helpers/index'
 
 export default {
   namespaced: true,
@@ -18,6 +19,18 @@ export default {
   actions: {
     SET_PROFILE: async ({ commit, dispatch }, data) => {
       commit('SET_PROFILE', data)
+    },
+    IMAGE_UPLOAD: async ({ dispatch, state }, image) => {
+      const res = await gql.query(`
+        mutation ($image: Upload!){
+          uploadImage(image: $image)
+            { ok errors }`, 
+        {
+          image
+        }
+      )
+
+      console.log(res)
     }
   }
 }

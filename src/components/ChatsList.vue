@@ -72,6 +72,7 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
     return {
+      show11: true,
       message: null,
       selected_chat: null,
     }

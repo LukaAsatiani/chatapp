@@ -1,5 +1,16 @@
 <template>
-  <Auth title="Signup">
+  <div>
+  <Auth
+    v-if="getProfile"
+    title="Profile Image"
+  >
+    <c-image-upload></c-image-upload>
+  </Auth>
+  
+  <Auth
+    v-else
+    title="Registration"
+  >
     <v-form
       ref="form"
       v-model="valid"
@@ -86,6 +97,7 @@
       </router-link>
     </div>
   </Auth>
+  </div>
 </template>
 
 <script>
@@ -140,6 +152,16 @@ export default {
     },
     async submit () {
       const validation = validate(this.fields, this.rules)
+      const confirmation = this.passwordConfirmation()
+
+
+      if(confirmation !== true){
+        this.setNotification({
+          type: 'error',
+          message: confirmation
+        })
+        return
+      }
       
       if(!validation.ok){
         this.setNotification({

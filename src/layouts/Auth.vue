@@ -1,5 +1,5 @@
 <template>
-  <v-col v-if="!this.getProfile">
+  <v-col>
     <v-card class="elevation-0 mx-auto" max-width="320" dark color="primary">
       <v-list-item three-line>
         <v-list-item-content>
